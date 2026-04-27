@@ -1,0 +1,69 @@
+{
+  "name": "@rayan_hn/render-inspector",
+  "version": "0.1.0",
+  "description": "React performance inspection tools for render counts, prop changes, render timing, and expensive work.",
+  "author": "Rayan Hnedi",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/RayanHnide/render-inspector#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RayanHnide/render-inspector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RayanHnide/render-inspector/issues"
+  },
+  "keywords": [
+    "react",
+    "performance",
+    "render",
+    "profiler",
+    "debug",
+    "nextjs",
+    "hooks",
+    "why-did-you-render"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && npm run build:js && npm run build:types",
+    "build:js": "esbuild src/index.ts --bundle --external:react --format=esm --banner:js='\"use client\";' --sourcemap --outfile=dist/index.js && esbuild src/index.ts --bundle --external:react --format=cjs --banner:js='\"use client\";' --sourcemap --outfile=dist/index.cjs",
+    "build:types": "tsc --project tsconfig.build.json",
+    "test": "tsx tests/run-tests.tsx",
+    "typecheck": "tsc --noEmit",
+    "pack:check": "npm pack --dry-run",
+    "release": "npm publish --access public",
+    "release:dry": "npm publish --access public --dry-run",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^15.0.7",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.2.79",
+    "esbuild": "^0.28.0",
+    "jsdom": "^24.1.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.4"
+  }
+}
