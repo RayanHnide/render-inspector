@@ -1,6 +1,6 @@
 {
   "name": "@rayan_hn/render-inspector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React performance inspection tools for render counts, prop changes, render timing, and expensive work.",
   "author": "Rayan Hnedi",
   "license": "MIT",
