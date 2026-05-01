@@ -21,7 +21,15 @@
     "debug",
     "nextjs",
     "hooks",
-    "why-did-you-render"
+    "why-did-you-render",
+    "react-performance",
+    "react-debugging",
+    "rerender",
+    "render-tracking",
+    "frontend-performance",
+    "developer-tools",
+    "vite",
+    "app-router"
   ],
   "sideEffects": false,
   "files": [

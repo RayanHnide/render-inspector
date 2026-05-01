@@ -1,10 +1,12 @@
 # Rayan Render Inspector
 
-React performance inspection tools by **Rayan Hnedi**.
+[![npm version](https://img.shields.io/npm/v/@rayan_hn/render-inspector.svg)](https://www.npmjs.com/package/@rayan_hn/render-inspector)
+[![npm downloads](https://img.shields.io/npm/dw/@rayan_hn/render-inspector.svg)](https://www.npmjs.com/package/@rayan_hn/render-inspector)
+[![license](https://img.shields.io/npm/l/@rayan_hn/render-inspector.svg)](./LICENSE)
 
-`@rayan_hn/render-inspector` helps React and Next.js developers understand why components rerender, how often they rerender, and which UI work is becoming expensive.
+React performance debugging tools for finding unnecessary rerenders, slow commits, and expensive calculations in minutes.
 
-It is designed for development debugging first. By default, logs are disabled in production builds.
+`@rayan_hn/render-inspector` is built for React and Next.js developers who want practical dev-time visibility with almost zero setup. By default, logs stay disabled in production.
 
 ## Install
 
@@ -12,37 +14,80 @@ It is designed for development debugging first. By default, logs are disabled in
 npm install @rayan_hn/render-inspector
 ```
 
-## Quick Start
+## Why Use It
+
+- Understand why components rerender and which props changed
+- Track rerender counts and highlight noisy components
+- Measure render commit time and expensive memoized tasks
+- Keep function identity stable with `useStableCallback`
+- Share config app-wide with `PerformanceProvider`
+
+## 60-Second Quick Start
 
 ```tsx
 "use client";
 
-import {
-  useRenderCount,
-  useRenderTime,
-  useWhyDidYouRender
-} from "@rayan_hn/render-inspector";
+import { useRenderCount, useRenderTime, useWhyDidYouRender } from "@rayan_hn/render-inspector";
 
-export function ProductCard(props) {
-  useRenderCount("ProductCard");
-  useWhyDidYouRender("ProductCard", props);
-  useRenderTime("ProductCard");
+export function ProductCard(props: { name: string; price: number; filter: string }) {
+  useRenderCount("ProductCard", { warnAfter: 8 });
+  useWhyDidYouRender("ProductCard", props, { deep: true, ignoreKeys: ["filter"] });
+  useRenderTime("ProductCard", { threshold: 10 });
 
-  return <div>{props.name}</div>;
+  return <div>{props.name} - ${props.price}</div>;
 }
 ```
 
-Console output can show:
+Example console output:
 
 ```txt
-[ProductCard] rendered 3 times
-[ProductCard] rerendered because 1 prop changed
-[ProductCard] render commit took 18.42ms
+[ProductCard] rendered 6 times
+[ProductCard] rerendered because 2 props changed
+[ProductCard] render commit took 19.52ms
+```
+
+## Works With
+
+- React 18+
+- Next.js (App Router + Client Components)
+- Vite React apps
+- TypeScript and JavaScript
+
+## Copy/Paste Examples
+
+### 1) Catch prop churn with `useWhyDidYouRender`
+
+```tsx
+useWhyDidYouRender("UserCard", props, {
+  deep: true,
+  ignoreKeys: ["updatedAt", "lastSeenAt"]
+});
+```
+
+### 2) Guard unstable UI trees with `RenderGuard`
+
+```tsx
+import { RenderGuard } from "@rayan_hn/render-inspector";
+
+<RenderGuard name="Sidebar" limit={6}>
+  <Sidebar />
+</RenderGuard>;
+```
+
+### 3) Track expensive list work with `useExpensiveTask`
+
+```tsx
+const visibleProducts = useExpensiveTask(
+  "filter-products",
+  () => products.filter(matchesFilters),
+  [products, matchesFilters],
+  { threshold: 8 }
+);
 ```
 
 ## Next.js App Router Setup
 
-Use the provider in `app/layout.tsx` if you want shared config:
+Use `PerformanceProvider` in `app/layout.tsx` to share defaults:
 
 ```tsx
 import type { ReactNode } from "react";
@@ -52,9 +97,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <PerformanceProvider slowRenderThreshold={12}>
-          {children}
-        </PerformanceProvider>
+        <PerformanceProvider slowRenderThreshold={12}>{children}</PerformanceProvider>
       </body>
     </html>
   );
@@ -64,32 +107,28 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 ## API
 
 ### `useRenderCount(name, options?)`
-
-Counts how many times a component rendered.
+Returns the current render count and logs each render based on options.
 
 ```tsx
-useRenderCount("DashboardTable", {
+const count = useRenderCount("DashboardTable", {
   warnAfter: 10,
   logEvery: 1
 });
 ```
 
 ### `useWhyDidYouRender(name, props, options?)`
-
-Compares previous props with current props and logs the keys that changed.
+Diffs previous and current props and logs what changed.
 
 ```tsx
 useWhyDidYouRender("UserCard", props, {
   deep: true,
-  ignoreKeys: ["updatedAt"]
+  ignoreKeys: ["updatedAt"],
+  logOnMount: false
 });
 ```
 
-When `deep` is enabled, equal objects with new references are reported as `reference` changes. That is useful for finding props that should be memoized.
-
 ### `useRenderTime(name, options?)`
-
-Measures render-to-commit time and warns when the threshold is exceeded.
+Measures render-to-commit duration and warns when threshold is exceeded.
 
 ```tsx
 useRenderTime("AnalyticsPanel", {
@@ -99,106 +138,77 @@ useRenderTime("AnalyticsPanel", {
 ```
 
 ### `RenderGuard`
-
-Warns when a wrapped area renders more than a limit.
+Simple wrapper around `useRenderCount` for subtree guardrails.
 
 ```tsx
-import { RenderGuard } from "@rayan_hn/render-inspector";
-
-<RenderGuard name="Sidebar" limit={5}>
-  <Sidebar />
+<RenderGuard name="CheckoutPanel" limit={5}>
+  <CheckoutPanel />
 </RenderGuard>
 ```
 
 ### `useStableCallback(callback)`
-
-Returns a stable function identity that always calls the latest callback.
-
-```tsx
-const handleSubmit = useStableCallback((value: string) => {
-  save(value);
-});
-```
+Keeps callback identity stable while always invoking the latest callback body.
 
 ### `useDeepCompareMemo(factory, deps)`
-
-Memoizes a value using deep dependency comparison.
-
-```tsx
-const filters = useDeepCompareMemo(
-  () => ({ status, sort }),
-  [{ status, sort }]
-);
-```
+Memoizes value when dependencies are deeply equal (useful for object-shaped deps).
 
 ### `useExpensiveTask(name, task, deps, options?)`
-
-Runs a memoized task and reports if it takes too long.
-
-```tsx
-const visibleProducts = useExpensiveTask(
-  "filter-products",
-  () => products.filter(matchesFilters),
-  [products, matchesFilters],
-  { threshold: 10 }
-);
-```
+Measures expensive computed work inside `useMemo` and warns over threshold.
 
 ### `usePerformanceMark(name)`
-
-Creates a manual measurement helper for event handlers and custom logic.
+Manually time custom event-handler workflows.
 
 ```tsx
 const mark = usePerformanceMark("Checkout");
 
-function onClick() {
+function onCheckout() {
   mark("calculate totals", () => {
     calculateTotals(cart);
   });
 }
 ```
 
-## Provider Config
+## Production Safety
+
+The library is dev-first:
+
+- `includeInProduction` defaults to `false`
+- hooks are effectively no-op in production unless explicitly enabled
+- provider-level config controls behavior globally
 
 ```tsx
 <PerformanceProvider
   enabled={process.env.NODE_ENV === "development"}
   includeInProduction={false}
   slowRenderThreshold={16}
-  logger={(level, message, meta) => {
-    console[level](message, meta);
-  }}
 >
   <App />
 </PerformanceProvider>
 ```
 
-## Publishing
+## FAQ
 
-Before publishing:
+### Does this affect production performance?
+No by default. Logging and checks are disabled in production unless you opt in with `includeInProduction`.
 
-```bash
-npm install
-npm run typecheck
-npm run test
-npm run build
-npm run pack:check
-```
+### Is this a replacement for React DevTools Profiler?
+No. It complements Profiler by giving in-code, component-level signals while you build.
 
-Publish the first public version:
+### Can I use this in Next.js App Router?
+Yes. Add the provider in layout and use hooks in client components.
 
-```bash
-npm login
-npm publish --access public
-```
+## Examples
 
-For future versions:
+See `examples/next-app` for ready-to-use snippets.
 
-```bash
-npm version patch
-npm publish --access public
-```
+## Growth + Marketing Assets
+
+To help increase adoption, this repo includes:
+
+- `docs/GROWTH_PLAN.md` - a 30-day distribution plan
+- `docs/SOCIAL_POSTS.md` - ready-to-publish social content
+- `docs/RELEASE_TEMPLATE.md` - weekly release checklist and changelog template
 
 ## License
 
-MIT © 2026 Rayan Hnedi
+MIT © 2026 Rayan Hnide
