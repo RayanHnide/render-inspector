@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@rayan_hn/render-inspector.svg)](https://www.npmjs.com/package/@rayan_hn/render-inspector)
 [![npm downloads](https://img.shields.io/npm/dw/@rayan_hn/render-inspector.svg)](https://www.npmjs.com/package/@rayan_hn/render-inspector)
 [![license](https://img.shields.io/npm/l/@rayan_hn/render-inspector.svg)](./LICENSE)
+[![CI](https://github.com/RayanHnide/render-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/RayanHnide/render-inspector/actions/workflows/ci.yml)
 
 React performance debugging tools for finding unnecessary rerenders, slow commits, and expensive calculations in minutes.
 
@@ -208,6 +209,16 @@ To help increase adoption, this repo includes:
 - `docs/GROWTH_PLAN.md` - a 30-day distribution plan
 - `docs/SOCIAL_POSTS.md` - ready-to-publish social content
 - `docs/RELEASE_TEMPLATE.md` - weekly release checklist and changelog template
+
+## Open Source Workflow
+
+For contributors and maintainers:
+
+- `CONTRIBUTING.md` - setup and contribution process
+- `CODE_OF_CONDUCT.md` - community behavior expectations
+- `SECURITY.md` - private vulnerability reporting
+- `ROADMAP.md` - upcoming priorities
+- `CHANGELOG.md` - release history and highlights
 
 ## License
 
