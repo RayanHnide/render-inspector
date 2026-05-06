@@ -39,6 +39,16 @@ jobs:
             exit 1
           fi
 
+      - name: Ensure npm token is configured
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN secret is missing. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          printf "//registry.npmjs.org/:_authToken=%s\n" "$NODE_AUTH_TOKEN" > "$HOME/.npmrc"
+
       - name: Publish package
         run: npm publish --access public
         env:
