@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-- Nothing yet
+### Changed
+
+- Switched release pipeline to Semantic Release on `main` pushes via `.github/workflows/publish.yml`
+- Added `.releaserc.json` to automate versioning, changelog updates, GitHub releases, tags, and npm publishing
+- Retired Release Drafter config/workflow in favor of fully automated semantic releases
 
 ## 0.1.5 - 2026-05-06
 

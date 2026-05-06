@@ -26,7 +26,7 @@ npm install @rayan_hn/render-inspector
 - Code scanning is enabled via CodeQL workflow
 - Daily dependency checks are enabled with Dependabot
 - OpenSSF Scorecard is available as an independent project health signal
-- Releases can be drafted automatically and published to npm from GitHub Actions
+- Semantic releases run on every `main` push to auto-version, tag, publish to npm, and create GitHub releases
 
 ## Why Use It
 

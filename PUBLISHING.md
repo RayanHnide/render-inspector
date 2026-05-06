@@ -80,40 +80,28 @@ Only do this if Options A and B are unavailable.
 
 ---
 
-## 3. Publish
+## 3. Publish (fully automated)
 
-You now have two release paths:
+Publishing is handled by Semantic Release in GitHub Actions.
 
-### Option A — Automated GitHub release publish (recommended)
+One-time setup:
 
-1. Create or update a release draft in GitHub (the Release Drafter workflow helps keep this current).
-2. Ensure the release tag follows `vX.Y.Z` and matches `package.json` version.
-3. Publish the GitHub release.
-4. The `Publish to npm` workflow validates typecheck/test/build and publishes with `NPM_TOKEN`.
+- Add `NPM_TOKEN` in GitHub repository secrets with publish rights for `@rayan_hn/render-inspector`
 
-Required one-time setup in repository secrets:
+Release flow:
 
-- `NPM_TOKEN` = npm token with publish rights for `@rayan_hn/render-inspector`
+1. Merge commits to `main` using Conventional Commit messages.
+2. `Publish to npm` workflow runs on each push to `main`.
+3. Semantic Release decides whether a new version is needed, then:
+   - bumps `package.json` and `package-lock.json`
+   - updates `CHANGELOG.md`
+   - creates git tag and GitHub Release
+   - publishes to npm
 
-### Option B — Manual CLI publish
-
-Dry run first to confirm the tarball contents and version:
-
-```bash
-npm run release:dry
-```
-
-Then publish for real:
+For a dry run in local development:
 
 ```bash
-npm run release        # === npm publish --access public
-```
-
-If 2FA "auth and writes" is enabled, npm will prompt for a one-time code, or
-you can pass it inline:
-
-```bash
-npm publish --access public --otp=123456
+npm run release:ci:dry
 ```
 
 ---
@@ -136,12 +124,11 @@ import { useRenderCount } from "@rayan_hn/render-inspector";
 
 ---
 
-## 5. Bumping versions for future releases
+## 5. Commit message rules (versioning)
 
 ```bash
-npm version patch   # 0.1.0 -> 0.1.1   (bug fixes)
-npm version minor   # 0.1.0 -> 0.2.0   (new features, backwards compatible)
-npm version major   # 0.1.0 -> 1.0.0   (breaking changes)
-git push --follow-tags
-npm run release
+fix: correct rerender threshold logic           # patch release
+feat: add useRenderHeatmap hook                 # minor release
+feat!: replace old provider API                 # major release
+chore: update docs and workflows                # no release unless configured
 ```
