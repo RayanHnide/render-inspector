@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-- Nothing yet
+### Added
+
+- New security and quality workflows: `codeql.yml` and `scorecard.yml`
+- Dependabot automation for npm and GitHub Actions updates via `.github/dependabot.yml`
+- Additional README trust badges for CodeQL, OpenSSF Scorecard, bundle size, and TypeScript readiness
+- Automated release tooling with Release Drafter (`.github/release-drafter.yml`, `.github/workflows/release-drafter.yml`)
+- npm publish automation workflow (`.github/workflows/publish.yml`) triggered from GitHub releases
+
+### Improved
+
+- Package metadata with `engines.node` and `funding` fields in `package.json`
+- README with a dedicated "Quality and Security" section
+- Publishing guide now includes automated GitHub release publishing
 
 ## 0.1.4 - 2026-05-01
 

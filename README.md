@@ -4,6 +4,11 @@
 [![npm downloads](https://img.shields.io/npm/dw/@rayan_hn/render-inspector.svg)](https://www.npmjs.com/package/@rayan_hn/render-inspector)
 [![license](https://img.shields.io/npm/l/@rayan_hn/render-inspector.svg)](./LICENSE)
 [![CI](https://github.com/RayanHnide/render-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/RayanHnide/render-inspector/actions/workflows/ci.yml)
+[![Publish](https://github.com/RayanHnide/render-inspector/actions/workflows/publish.yml/badge.svg)](https://github.com/RayanHnide/render-inspector/actions/workflows/publish.yml)
+[![CodeQL](https://github.com/RayanHnide/render-inspector/actions/workflows/codeql.yml/badge.svg)](https://github.com/RayanHnide/render-inspector/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/RayanHnide/render-inspector/badge)](https://securityscorecards.dev/viewer/?uri=github.com/RayanHnide/render-inspector)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/@rayan_hn/render-inspector)](https://bundlephobia.com/package/@rayan_hn/render-inspector)
+[![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 React performance debugging tools for finding unnecessary rerenders, slow commits, and expensive calculations in minutes.
 
@@ -14,6 +19,14 @@ React performance debugging tools for finding unnecessary rerenders, slow commit
 ```bash
 npm install @rayan_hn/render-inspector
 ```
+
+## Quality and Security
+
+- CI runs typecheck, tests, and build on every PR and push to `main`
+- Code scanning is enabled via CodeQL workflow
+- Daily dependency checks are enabled with Dependabot
+- OpenSSF Scorecard is available as an independent project health signal
+- Releases can be drafted automatically and published to npm from GitHub Actions
 
 ## Why Use It
 

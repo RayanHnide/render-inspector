@@ -4,6 +4,10 @@
   "description": "React performance inspection tools for render counts, prop changes, render timing, and expensive work.",
   "author": "Rayan Hnedi",
   "license": "MIT",
+  "funding": "https://github.com/RayanHnide",
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "type": "module",
   "homepage": "https://github.com/RayanHnide/render-inspector#readme",
   "repository": {

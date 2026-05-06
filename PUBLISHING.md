@@ -82,6 +82,21 @@ Only do this if Options A and B are unavailable.
 
 ## 3. Publish
 
+You now have two release paths:
+
+### Option A — Automated GitHub release publish (recommended)
+
+1. Create or update a release draft in GitHub (the Release Drafter workflow helps keep this current).
+2. Ensure the release tag follows `vX.Y.Z` and matches `package.json` version.
+3. Publish the GitHub release.
+4. The `Publish to npm` workflow validates typecheck/test/build and publishes with `NPM_TOKEN`.
+
+Required one-time setup in repository secrets:
+
+- `NPM_TOKEN` = npm token with publish rights for `@rayan_hn/render-inspector`
+
+### Option B — Manual CLI publish
+
 Dry run first to confirm the tarball contents and version:
 
 ```bash
