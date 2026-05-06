@@ -9,6 +9,16 @@ All notable changes to this project will be documented in this file.
 - Switched release pipeline to Semantic Release on `main` pushes via `.github/workflows/publish.yml`
 - Added `.releaserc.json` to automate versioning, changelog updates, GitHub releases, tags, and npm publishing
 - Retired Release Drafter config/workflow in favor of fully automated semantic releases
+- Updated package metadata (`description`, keywords) to improve npm search discoverability
+- Repositioned README top section for faster conversion with outcome-first messaging and comparisons
+
+### Added
+
+- Three practical growth/SEO recipe docs:
+  - `docs/recipes/nextjs-dashboard-input-lag.md`
+  - `docs/recipes/product-list-rerender-storm.md`
+  - `docs/recipes/expensive-memo-debugging.md`
+- New growth strategy refresh in `docs/GROWTH_PLAN.md` targeting 490 -> 1,500+ weekly downloads
 
 ## 0.1.5 - 2026-05-06
 

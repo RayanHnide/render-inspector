@@ -10,14 +10,34 @@
 [![Bundle size](https://img.shields.io/bundlephobia/minzip/@rayan_hn/render-inspector)](https://bundlephobia.com/package/@rayan_hn/render-inspector)
 [![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-React performance debugging tools for finding unnecessary rerenders, slow commits, and expensive calculations in minutes.
+Detect unnecessary React rerenders in minutes, not hours.
 
-`@rayan_hn/render-inspector` is built for React and Next.js developers who want practical dev-time visibility with almost zero setup. By default, logs stay disabled in production.
+`@rayan_hn/render-inspector` gives React and Next.js teams fast answers to three expensive questions:
+
+- Why did this component rerender?
+- Which subtree is rerendering too often?
+- Which render/compute path is actually slow?
+
+It is dev-first and production-safe by default (`includeInProduction: false`).
 
 ## Install
 
 ```bash
 npm install @rayan_hn/render-inspector
+```
+
+## 20-Second Outcome Demo
+
+```tsx
+useRenderCount("CheckoutPanel", { warnAfter: 6 });
+useWhyDidYouRender("CheckoutPanel", props, { deep: true });
+useRenderTime("CheckoutPanel", { threshold: 12 });
+```
+
+```txt
+[CheckoutPanel] rerendered because 1 props changed
+changed: onSubmit (function identity)
+[CheckoutPanel] render commit took 18.24ms
 ```
 
 ## Quality and Security
@@ -35,6 +55,24 @@ npm install @rayan_hn/render-inspector
 - Measure render commit time and expensive memoized tasks
 - Keep function identity stable with `useStableCallback`
 - Share config app-wide with `PerformanceProvider`
+
+## Use Cases You Can Copy Today
+
+- Next.js dashboard input lag: `docs/recipes/nextjs-dashboard-input-lag.md`
+- Product list rerender storms: `docs/recipes/product-list-rerender-storm.md`
+- Expensive memoized computations: `docs/recipes/expensive-memo-debugging.md`
+
+## Comparison
+
+### vs React DevTools Profiler
+
+- Profiler is great for deep session analysis
+- Render Inspector is better for always-on in-code signals while building features
+
+### vs `why-did-you-render`
+
+- `why-did-you-render` focuses on rerender reasons
+- Render Inspector additionally tracks render counts, render commit timings, and expensive memoized tasks in one package
 
 ## 60-Second Quick Start
 
