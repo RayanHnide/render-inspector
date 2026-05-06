@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- Nothing yet
+
+## 0.1.5 - 2026-05-06
+
 ### Added
 
 - New security and quality workflows: `codeql.yml` and `scorecard.yml`
