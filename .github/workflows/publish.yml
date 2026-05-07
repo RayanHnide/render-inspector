@@ -90,4 +90,4 @@ jobs:
             exit 0
           fi
 
-          npm publish "$GH_PKG_DIR" --registry=https://npm.pkg.github.com
+          npm publish "$GH_PKG_DIR" --registry=https://npm.pkg.github.com --ignore-scripts
