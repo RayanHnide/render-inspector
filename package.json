@@ -1,6 +1,6 @@
 {
   "name": "@rayan_hn/render-inspector",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Detect React rerenders fast: why components rerender, render count tracking, render timing, and expensive computation debugging.",
   "author": "Rayan Hnedi",
   "license": "MIT",

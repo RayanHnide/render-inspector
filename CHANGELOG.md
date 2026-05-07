@@ -1,3 +1,9 @@
+## [0.2.0](https://github.com/RayanHnide/render-inspector/compare/v0.1.5...v0.2.0) (2026-05-06)
+
+### Features
+
+* add growth-focused docs and npm positioning ([9302e2f](https://github.com/RayanHnide/render-inspector/commit/9302e2f0f147b90616a7df70ca57c1802226079a))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
