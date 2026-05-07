@@ -1,4 +1,4 @@
-name: Publish to npm
+name: Publish packages
 
 on:
   push:
@@ -9,6 +9,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  packages: write
 
 jobs:
   publish:
@@ -47,3 +48,46 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Node for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@${{ github.repository_owner }}"
+
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: |
+          PKG_NAME="$(node -p "require('./package.json').name")"
+          OWNER_LC="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
+          BASE_NAME="${PKG_NAME#@*/}"
+          GH_PKG_NAME="@$OWNER_LC/$BASE_NAME"
+          PACK_JSON="$(npm pack --json)"
+          TARBALL="$(node -e "const data = JSON.parse(process.argv[1]); console.log(data[0].filename);" "$PACK_JSON")"
+          WORK_DIR="$(mktemp -d)"
+          trap 'rm -rf "$WORK_DIR" "$TARBALL"' EXIT
+
+          tar -xzf "$TARBALL" -C "$WORK_DIR"
+          GH_PKG_DIR="$WORK_DIR/package"
+
+          node -e "
+            const fs = require('node:fs');
+            const path = process.argv[1];
+            const nextName = process.argv[2];
+            const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
+            pkg.name = nextName;
+            pkg.publishConfig = { ...(pkg.publishConfig || {}), registry: 'https://npm.pkg.github.com' };
+            fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
+          " "$GH_PKG_DIR/package.json" "$GH_PKG_NAME"
+
+          GH_PKG_VERSION="$(node -e "console.log(require(process.argv[1]).version)" "$GH_PKG_DIR/package.json")"
+
+          if npm view "$GH_PKG_NAME@$GH_PKG_VERSION" version --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "Version $GH_PKG_VERSION is already published to GitHub Packages as $GH_PKG_NAME. Skipping."
+            exit 0
+          fi
+
+          npm publish "$GH_PKG_DIR" --registry=https://npm.pkg.github.com

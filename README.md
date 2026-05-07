@@ -22,9 +22,26 @@ It is dev-first and production-safe by default (`includeInProduction: false`).
 
 ## Install
 
+From npm (recommended):
+
 ```bash
 npm install @rayan_hn/render-inspector
 ```
+
+From GitHub Packages:
+
+```bash
+npm install @rayanhnide/render-inspector --registry=https://npm.pkg.github.com
+```
+
+If you use GitHub Packages, add this to your user `.npmrc`:
+
+```ini
+@rayanhnide:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+Then set `GITHUB_TOKEN` in your shell to a GitHub token with `read:packages`.
 
 ## 20-Second Outcome Demo
 
